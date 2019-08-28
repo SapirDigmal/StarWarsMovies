@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-
 import {Observable, Subject} from 'rxjs';
+import {map} from "rxjs/internal/operators";
 import {distinctUntilChanged, switchMap} from 'rxjs/operators';
 import { MoviesList, Movie } from "../movies-list"; 
 import { MoviesService } from '../movies.service';
+
 
 @Component({
   selector: 'app-movies',
@@ -14,30 +15,42 @@ export class MoviesComponent implements OnInit {
 
   private movies$: Observable<Object>;
   private favMovies: Movie[];
-  private favMode: boolean;
 
   constructor(private moviesService: MoviesService) { }
 
   ngOnInit() {
 
-    this.movies$ = this.moviesService.getMovies();
-    this.favMovies = [];
+	let storageFavMovies = JSON.parse(localStorage.getItem("favoriteMovies"));
+    this.favMovies = storageFavMovies ? storageFavMovies : new Array<Movie>();
+    this.movies$ = this.moviesService.getMovies().pipe(map(movies => { 
+    	
+    	movies.forEach(movie => {
+    		movie.isFav = this.favMovies.indexOf(movie.episode_id) !== -1; 
+    	});
+    	return movies;
+    	}));
   }
  
   changeFavorite(item) {
-  	if (this.favMovies.indexOf(item) == -1){
-  		this.favMovies.push(item);
+
+  	if (this.favMovies.indexOf(item.episode_id) === -1){
+  		this.favMovies.push(item.episode_id);
   		item.isFav = true; 	
   	} else {
-  		this.favMovies = this.arrayRemove(this.favMovies, item);
+  		this.favMovies = this.arrayRemove(this.favMovies, item.episode_id);
     	item.isFav = false; 
   	}
+
+  	this.saveFavorites ();
+  }
+
+  private saveFavorites (): void {
+    localStorage.setItem("favoriteMovies", JSON.stringify(this.favMovies));
   }
 
   private arrayRemove(arr, value) {
 
    return arr.filter(function(currItem){
-   	console.log(currItem != value);
        return currItem != value;
    });
   }

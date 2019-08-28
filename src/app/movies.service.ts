@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import { ConfigService, Config } from './config.service';
 
 import {Observable, of} from 'rxjs';
 import {map} from "rxjs/internal/operators";
@@ -12,23 +11,15 @@ import { MoviesList, Movie } from "./movies-list";
 })
 export class MoviesService {
 
-  private config: Config;
+  private url = "https://swapi.co/api/films";
 
-  constructor(private http: HttpClient, private configService: ConfigService) { 
-    this.getUrl();
-  }
+  constructor(private http: HttpClient) { 
 
-  getUrl(): void {
-    this.configService.getConfig()
-      .subscribe((config: Config) => {
-        this.config = config;
-      });
   }
 
   getMovies(): Observable<Object> {
     
-    const url = "https://swapi.co/api/films";//this.config.moviesUrl;
-    let results = this.http.get<MoviesList>(url).pipe(map(data => data.results));
+    let results = this.http.get<MoviesList>(this.url).pipe(map(data => data.results));
     return results;
   }
 }
