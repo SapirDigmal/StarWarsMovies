@@ -11,15 +11,13 @@ import { MoviesList, Movie } from "./movies-list";
 })
 export class MoviesService {
 
-  private url = "https://swapi.co/api/films";
-
   constructor(private http: HttpClient) { 
 
   }
 
   getMovies(): Observable<Object> {
-    
-    let results = this.http.get<MoviesList>(this.url).pipe(map(data => data.results));
+    const url = "https://swapi.co/api/films";
+    let results = this.http.get<MoviesList>(url).pipe(map(data => data.results));
     return results;
   }
 }

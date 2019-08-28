@@ -13,7 +13,7 @@ import { MoviesService } from '../movies.service';
 })
 export class MoviesComponent implements OnInit {
 
-  private movies$: Observable<Object>;
+  private movies$: Observable<Movie[]>;
   private favMovies: Movie[];
 
   constructor(private moviesService: MoviesService) { }
@@ -22,11 +22,11 @@ export class MoviesComponent implements OnInit {
 
 	let storageFavMovies = JSON.parse(localStorage.getItem("favoriteMovies"));
     this.favMovies = storageFavMovies ? storageFavMovies : new Array<Movie>();
-    this.movies$ = this.moviesService.getMovies().pipe(map(movies => { 
+    this.movies$ = this.moviesService.getMovies().pipe(map((movies : Array<Movie>) => { 
     	
-    	movies.forEach(movie => {
+    	movies.forEach((movie : any) => {
     		movie.isFav = this.favMovies.indexOf(movie.episode_id) !== -1; 
-    	});
+    	}); 
     	return movies;
     	}));
   }
