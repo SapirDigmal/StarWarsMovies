@@ -1,12 +1,31 @@
-<div>
-    <div class="container">
-    </div>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 
-    <div class="movies-list">
-        <div *ngFor="let movie of movies$ | async">
-            <span>Movie Title: {{movie.title}} Number: {{movie.episode_id}}</span>
-        </div>
-       
+<div>
+
+	    <div class="movies-list">
+	        <div *ngFor="let movie of movies$ | async">
+				<section class="row">
+		      		<div class="grid">
+		        		<section class="movie">
+		          			<div class="col-2-3">
+	            				<h2> {{movie.title}} {{movie.episode_id}}</h2>
+	            				 <button *ngIf="!movie.isFav" class="favButton" (click)="changeFavorite(movie)">
+	            				    <i class="material-icons">
+	        							favorite_border
+	    							</i>
+	    						</button>
+								<button *ngIf="movie.isFav" class="favButton" (click)="changeFavorite(movie)">
+	            				    <i class="material-icons">
+	        							favorite
+	    							</i>
+	    						</button>
+	           			 		<p>{{movie.opening_crawl}}</p>
+	        				</div>
+	        			</section>
+	        		</div>
+	        	</section>
+	        </div>
     </div>
 
     

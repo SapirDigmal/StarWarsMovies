@@ -21,7 +21,6 @@ export class MoviesService {
   getUrl(): void {
     this.configService.getConfig()
       .subscribe((config: Config) => {
-        debugger;
         this.config = config;
       });
   }
@@ -30,7 +29,6 @@ export class MoviesService {
     
     const url = "https://swapi.co/api/films";//this.config.moviesUrl;
     let results = this.http.get<MoviesList>(url).pipe(map(data => data.results));
-    debugger;
     return results;
   }
 }
